@@ -4,7 +4,7 @@ class Database {
 
     public static function mysql () {
         if (!isset(Database::$mysql)) {
-            Database::$mysql = new mysqli("host", "username", "password", "db");
+            Database::$mysql = new mysqli("mysql.caesar.elte.hu", "zzz", "iyifbH3E5RecvT7z", "zzz");
         }
         return Database::$mysql;
     }
