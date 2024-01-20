@@ -9,7 +9,7 @@
 <body>
 	<div class="box">
 		<h1 id="game-over" class="warning"></h1>
-		<h1 id="wrong-auth" class="warning">WRONG USERNAME OR PASSWORD</h1>
+		<h1 id="wrong-auth" class="warning"></h1>
 	</div>
 	<div id="game-board-outer" class="box">
 		<div id="game-board">

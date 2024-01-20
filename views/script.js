@@ -188,14 +188,21 @@ const password = document.getElementById("password");
 
 let wtimer;
 
-function showAuthWarning () {
+function showAuthWarning (text, time, elements) {
     clearAuthWarning();
+    document.getElementById("wrong-auth").innerHTML = text;
     document.getElementById("wrong-auth").style.display = "block";
-    wtimer = setTimeout(clearAuthWarning, 3000);
+    for (const el of elements) {
+        document.getElementById(el).style.borderColor = "#B85244"
+    }
+    wtimer = setTimeout(clearAuthWarning, time);
 }
 function clearAuthWarning () {
     clearTimeout(wtimer);
+    document.getElementById("wrong-auth").innerHTML = "";
     document.getElementById("wrong-auth").style.display = "none";
+    document.getElementById("username").style.borderColor = "#fff"
+    document.getElementById("password").style.borderColor = "#fff"
 }
 
 async function login () {
@@ -212,11 +219,23 @@ async function login () {
         endAuth();
         startGame();
     } else {
-        showAuthWarning();
+        showAuthWarning("WRONG USERNAME OR PASSWORD", 3000, ["username", "password"]);
     }
 }
 
-async function register () {
+async function register () {    
+    let invalid = []
+    if (username.value.length < 2 || username.value.length > 32 || !/^[a-zA-Z0-9]+$/.test(username.value)) {
+        invalid.push("username");
+    }
+    if (password.value.length < 6 || password.value.length > 64 || !/^[a-zA-Z0-9]+$/.test(password.value)) {
+        invalid.push("password");
+    }
+    if (invalid.length > 0) {
+        showAuthWarning("INVALID USERNAME OR PASSWORD<br>USERNAME: 2-32 CHARACTERS<br>PASSWORD: 6-64 CHARACTERS<br>LETTERS, NUMBERS OR $ SYMBOL", 15000, invalid);
+        return;
+    };
+
     let form = new FormData();
     form.set("username", username.value);
     form.set("password", password.value);
@@ -229,8 +248,10 @@ async function register () {
     if (result.status == 200) {
         endAuth();
         startGame();
+    } else if (result.status == 409) {
+        showAuthWarning("USERNAME ALREADY IN USE", 3000, ["username"]);
     } else {
-        showAuthWarning();
+        showAuthWarning("INTERNAL SERVER ERROR", 3000, ["username", "password"]);
     }
 }
 
